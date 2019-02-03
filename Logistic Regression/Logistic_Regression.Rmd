@@ -1,0 +1,77 @@
+---
+title: "Logistic_Regression"
+author: "Animesh Kansal"
+date: "2/2/2019"
+output: html_document
+---
+
+# Loading libraries
+```{r}
+library('ISLR')
+library('caret')
+```
+
+
+# Dataset
+```{r}
+names(Smarket)
+
+summary(Smarket)
+
+pairs(Smarket,col=Smarket$Direction)
+
+
+```
+
+# Logistic Regression
+```{r}
+
+glm.fit = glm(Direction~Lag1+Lag2+Lag3+Lag4+Lag5+Volume,data=Smarket,family = binomial)
+
+summary(glm.fit)
+
+glm.probs = predict(glm.fit,type = "response")
+glm.probs[1:5]
+
+glm.pred = ifelse(glm.probs>0.5,"Up","Down")
+
+attach(Smarket)
+
+table(glm.pred,Direction)
+
+mean(glm.pred==Direction)
+```
+
+
+# Train and test
+```{r}
+glm.fit = glm(Direction~Lag1+Lag2+Lag3+Lag4+Lag5+Volume,data=Smarket,family = binomial,subset = Year < 2005)
+
+Smarket.2005 = subset(Smarket,Year==2005)
+
+glm.probs = predict(glm.fit,newdata = Smarket.2005,type = "response")
+
+glm.pred = ifelse(glm.probs>0.5,"Up","Down")
+
+table(glm.pred,Smarket.2005$Direction)
+
+mean(glm.pred==Smarket.2005$Direction)
+
+
+```
+
+
+# Fit smaller model
+```{r}
+
+glm.fit = glm(Direction~Lag1+Lag2,data=Smarket,family = binomial,subset = Year < 2005)
+
+glm.probs = predict(glm.fit,newdata = Smarket.2005,type = "response")
+
+glm.pred = ifelse(glm.probs>0.5,"Up","Down")
+
+table(glm.pred,Smarket.2005$Direction)
+
+mean(glm.pred==Smarket.2005$Direction)
+
+```

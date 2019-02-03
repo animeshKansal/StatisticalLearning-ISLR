@@ -1,0 +1,92 @@
+---
+title: "Regression"
+author: "Animesh Kansal"
+date: "2/2/2019"
+output: html_document
+---
+
+# Loading libraries
+```{r}
+library(MASS)
+library(ISLR)
+```
+
+
+# Simple Linear Regression 
+```{r}
+names(Boston)
+
+?Boston
+
+plot(medv~lstat,Boston)
+
+fit_1 = lm(medv~lstat,Boston)
+```
+
+# Run regression and predict new obs with confidence intervals
+```{r}
+
+fit_1
+{plot(medv~lstat,Boston)
+abline(fit_1,col = "red")}
+
+summary(fit_1)
+
+names(fit_1)
+confint(fit_1)
+
+predict(fit_1,data.frame(lstat=c(10,15,20)),interval = "confidence")
+```
+
+## Multiple linear regression
+
+```{r}
+fit_2 <- lm(medv~lstat+age,Boston)
+summary(fit_2)
+
+fit_3 <- lm(medv~.,Boston)
+summary(fit_3)
+
+plot(fit_3)
+
+```
+
+```{r}
+
+fit_4= update(fit_3,~.-age-indus)
+summary(fit_4)
+```
+
+
+# Interactions and Non-linear fits
+```{r}
+
+fit_5 <- lm(medv~lstat*age,Boston)
+summary(fit_5)
+
+fit_6 <- lm(medv~lstat +I(lstat^2),Boston)
+summary(fit_6)
+
+attach(Boston)
+{plot(medv~lstat)
+  points(lstat,fitted(fit_6),col='red' ,pch=20)}
+
+fit_7 <- lm(medv~poly(lstat,4))
+summary(fit_4)
+
+{plot(medv~lstat)
+  points(lstat,fitted(fit_7),col='blue' ,pch=20)}
+
+```
+
+# Qualitative predictors
+```{r}
+#fix(Carseats)
+names(Carseats)
+summary(Carseats)
+
+fit_8 <- lm(Sales~.+Income:Advertising+Age:Price,Carseats)
+summary(fit_8)
+
+contrasts(Carseats$ShelveLoc)
+```
