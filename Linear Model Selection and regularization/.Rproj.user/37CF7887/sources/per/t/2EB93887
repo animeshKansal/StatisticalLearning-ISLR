@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1549235311430.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "858992986",
+    "id" : "2EB93887",
+    "lastKnownWriteTime" : 1549245155,
+    "last_content_update" : 1549245155503,
+    "path" : "~/Desktop/______Studies_____/GitHub_Repos/StatisticalLearning-ISLR/Linear Model Selection and regularization/ModelSelection.Rmd",
+    "project_path" : "ModelSelection.Rmd",
+    "properties" : {
+        "cursorPosition" : "148,29",
+        "scrollLine" : "137",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

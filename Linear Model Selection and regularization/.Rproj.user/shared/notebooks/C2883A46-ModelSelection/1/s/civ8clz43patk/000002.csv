@@ -1,0 +1,6 @@
+"0","Hitters=na.omit(Hitters)"
+"0","with(Hitters,sum(is.na(Salary)))"
+"1","[1]"
+"1"," 0"
+"1","
+"

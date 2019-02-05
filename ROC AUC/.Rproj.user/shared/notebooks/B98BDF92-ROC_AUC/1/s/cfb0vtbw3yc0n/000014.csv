@@ -1,0 +1,1 @@
+"0","plot.roc(obese,rf_model$votes[,1],percent= TRUE,col = '#4daf4a',lwd = 4,print.auc=TRUE,add=TRUE, print.auc.y=40)"

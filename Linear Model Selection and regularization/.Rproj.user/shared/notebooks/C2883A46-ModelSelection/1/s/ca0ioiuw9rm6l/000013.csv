@@ -1,0 +1,2 @@
+"0","cv_ridge=cv.glmnet(x,y,alpha = 0)"
+"0","plot(cv_ridge)"

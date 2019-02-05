@@ -1,0 +1,2 @@
+"0","glm_fit = glm(obese ~ weight, family = binomial)"
+"0","plot(x= weight,y = obese)"

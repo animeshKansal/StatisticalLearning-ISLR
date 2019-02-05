@@ -1,0 +1,3 @@
+"0","library(glmnet)"
+"0","x = model.matrix(Salary~.-1,data = Hitters)"
+"0","y = Hitters$Salary"

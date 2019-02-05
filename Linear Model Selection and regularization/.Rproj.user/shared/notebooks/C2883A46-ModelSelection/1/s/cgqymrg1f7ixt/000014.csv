@@ -1,0 +1,1 @@
+"0","points(sqrt(regfit_Fwd$rss[-1]/180),col = 'blue',pch = 10,  type = 'b')"

@@ -1,0 +1,2 @@
+"0","fit_ridge = glmnet(x,y,alpha = 0)"
+"0","plot(fit_ridge,xvar=""lambda"",label= TRUE)"

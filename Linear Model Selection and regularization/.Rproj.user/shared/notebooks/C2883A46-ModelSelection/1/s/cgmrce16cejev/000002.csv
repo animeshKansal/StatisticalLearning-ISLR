@@ -1,0 +1,6 @@
+"0","predict_regsubsets = function(object,newdata,id,...){"
+"0","  form = as.formula(object$call[[2]])"
+"0","  mat = model.matrix(form,newdata)"
+"0","  coefi = coef(object,id = id)"
+"0","  mat[,names(coefi)]%*%coefi"
+"0","}"
