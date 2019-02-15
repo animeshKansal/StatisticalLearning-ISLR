@@ -1,0 +1,12 @@
+name: Accident_Dashboard
+title: Accident_Dashboard
+username:
+account: animeshkansal
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 717899
+bundleId: 1877318
+url: https://animeshkansal.shinyapps.io/Accident_Dashboard/
+when: 1550189643.66827
+asMultiple: FALSE
+asStatic: FALSE

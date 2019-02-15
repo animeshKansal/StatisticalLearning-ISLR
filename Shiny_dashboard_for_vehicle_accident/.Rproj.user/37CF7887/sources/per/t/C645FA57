@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1550071872974.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "127476834",
+    "id" : "C645FA57",
+    "lastKnownWriteTime" : 1550189603,
+    "last_content_update" : 1550189603552,
+    "path" : "~/Desktop/______Studies_____/GitHub_Repos/StatisticalLearning-ISLR/Shiny_dashboard_for_vehicle_accident/leaflet/app.R",
+    "project_path" : "leaflet/app.R",
+    "properties" : {
+        "cursorPosition" : "4,0",
+        "scrollLine" : "4"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

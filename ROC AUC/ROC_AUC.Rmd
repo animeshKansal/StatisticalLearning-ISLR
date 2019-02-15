@@ -2,7 +2,10 @@
 title: "ROC_AUC"
 author: "Animesh Kansal"
 date: "2/4/2019"
-output: html_document
+output:
+  pdf_document: default
+  word_document: default
+  html_document: default
 ---
 
 ```{r}

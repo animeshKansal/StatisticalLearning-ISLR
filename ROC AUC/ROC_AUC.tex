@@ -1,0 +1,410 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={ROC\_AUC},
+            pdfauthor={Animesh Kansal},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{ROC\_AUC}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Animesh Kansal}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{2/4/2019}
+
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(pROC)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Type 'citation("pROC")' for a citation.
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'pROC'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     cov, smooth, var
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(randomForest)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## randomForest 4.6-14
+\end{verbatim}
+
+\begin{verbatim}
+## Type rfNews() to see new features/changes/bug fixes.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{420}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{num_samples =}\StringTok{ }\DecValTok{100}
+\NormalTok{weight =}\StringTok{ }\KeywordTok{sort}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(}\DataTypeTok{n =}\NormalTok{ num_samples,}\DataTypeTok{mean =} \DecValTok{172}\NormalTok{,}\DataTypeTok{sd =} \DecValTok{29}\NormalTok{))}
+\NormalTok{obese =}\StringTok{ }\KeywordTok{ifelse}\NormalTok{(}\DataTypeTok{test =}\NormalTok{ (}\KeywordTok{runif}\NormalTok{(}\DataTypeTok{n=}\NormalTok{num_samples) }\OperatorTok{<}\StringTok{ }\NormalTok{(}\KeywordTok{rank}\NormalTok{(weight)}\OperatorTok{/}\DecValTok{100}\NormalTok{)), }\DataTypeTok{yes =} \DecValTok{1}\NormalTok{,}\DataTypeTok{no =} \DecValTok{0}\NormalTok{ )}
+
+\NormalTok{obese}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   [1] 0 0 0 0 0 0 0 0 1 1 0 1 0 0 0 0 0 0 0 0 0 0 1 0 1 1 0 0 0 1 1 0 0 1 0
+##  [36] 0 0 0 1 1 1 0 0 1 0 0 1 0 0 1 1 1 1 0 0 1 0 0 1 1 1 0 1 1 1 0 1 0 1 1
+##  [71] 1 0 0 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(}\DataTypeTok{x=}\NormalTok{ weight,}\DataTypeTok{y =}\NormalTok{ obese)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ROC_AUC_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\section{Logistic regression}\label{logistic-regression}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{glm_fit =}\StringTok{ }\KeywordTok{glm}\NormalTok{(obese }\OperatorTok{~}\StringTok{ }\NormalTok{weight, }\DataTypeTok{family =}\NormalTok{ binomial)}
+\KeywordTok{plot}\NormalTok{(}\DataTypeTok{x=}\NormalTok{ weight,}\DataTypeTok{y =}\NormalTok{ obese)}
+\KeywordTok{lines}\NormalTok{(weight,glm_fit}\OperatorTok{$}\NormalTok{fitted.values)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ROC_AUC_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+\section{AUC ROC}\label{auc-roc}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{pty =} \StringTok{"s"}\NormalTok{)}
+\KeywordTok{roc}\NormalTok{(}
+\NormalTok{obese,}
+\NormalTok{glm_fit}\OperatorTok{$}\NormalTok{fitted.values,}
+\DataTypeTok{plot =} \OtherTok{TRUE}\NormalTok{,}
+\DataTypeTok{legacy.axes =} \OtherTok{TRUE}\NormalTok{,}
+\DataTypeTok{percent =} \OtherTok{TRUE}\NormalTok{,}
+\DataTypeTok{xlab =} \StringTok{"False Positive Percentage"}\NormalTok{,}
+\DataTypeTok{ylab =} \StringTok{"True Positive Percentage"}\NormalTok{,}
+\DataTypeTok{col =} \StringTok{"#377eb8"}\NormalTok{,}
+\DataTypeTok{lwd =} \DecValTok{4}\NormalTok{,}
+\DataTypeTok{print.auc =} \OtherTok{TRUE}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ROC_AUC_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\begin{verbatim}
+## 
+## Call:
+## roc.default(response = obese, predictor = glm_fit$fitted.values,     percent = TRUE, plot = TRUE, legacy.axes = TRUE, xlab = "False Positive Percentage",     ylab = "True Positive Percentage", col = "#377eb8", lwd = 4,     print.auc = TRUE)
+## 
+## Data: glm_fit$fitted.values in 45 controls (obese 0) < 55 cases (obese 1).
+## Area under the curve: 82.91%
+\end{verbatim}
+
+\section{Partial AUC ROC}\label{partial-auc-roc}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{pty =} \StringTok{"s"}\NormalTok{)}
+\KeywordTok{roc}\NormalTok{(}
+\NormalTok{obese,}
+\NormalTok{glm_fit}\OperatorTok{$}\NormalTok{fitted.values,}
+\DataTypeTok{plot =} \OtherTok{TRUE}\NormalTok{,}
+\DataTypeTok{legacy.axes =} \OtherTok{TRUE}\NormalTok{,}
+\DataTypeTok{percent =} \OtherTok{TRUE}\NormalTok{,}
+\DataTypeTok{xlab =} \StringTok{"False Positive Percentage"}\NormalTok{,}
+\DataTypeTok{ylab =} \StringTok{"True Positive Percentage"}\NormalTok{,}
+\DataTypeTok{col =} \StringTok{"#377eb8"}\NormalTok{,}
+\DataTypeTok{lwd =} \DecValTok{4}\NormalTok{,}
+\DataTypeTok{print.auc =} \OtherTok{TRUE}\NormalTok{,}
+\DataTypeTok{print.auc.x =} \DecValTok{45}\NormalTok{,}
+\DataTypeTok{partial.auc=}\KeywordTok{c}\NormalTok{(}\DecValTok{100}\NormalTok{,}\DecValTok{90}\NormalTok{),}
+\DataTypeTok{auc.polygon =} \OtherTok{TRUE}\NormalTok{,}
+\DataTypeTok{auc.polygon.col =} \StringTok{'#377eb822'}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ROC_AUC_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\begin{verbatim}
+## 
+## Call:
+## roc.default(response = obese, predictor = glm_fit$fitted.values,     percent = TRUE, plot = TRUE, legacy.axes = TRUE, xlab = "False Positive Percentage",     ylab = "True Positive Percentage", col = "#377eb8", lwd = 4,     print.auc = TRUE, print.auc.x = 45, partial.auc = c(100,         90), auc.polygon = TRUE, auc.polygon.col = "#377eb822")
+## 
+## Data: glm_fit$fitted.values in 45 controls (obese 0) < 55 cases (obese 1).
+## Partial area under the curve (specificity 100%-90%): 4.727%
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{roc_info =}\StringTok{ }\KeywordTok{roc}\NormalTok{(obese, glm_fit}\OperatorTok{$}\NormalTok{fitted.values, }\DataTypeTok{legacy.axes =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{roc_def =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}
+  \DataTypeTok{tpp =}\NormalTok{ roc_info}\OperatorTok{$}\NormalTok{sensitivities }\OperatorTok{*}\StringTok{ }\DecValTok{100}\NormalTok{,}
+  \DataTypeTok{fpp =}\NormalTok{ (}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{roc_info}\OperatorTok{$}\NormalTok{specificities) }\OperatorTok{*}\StringTok{ }\DecValTok{100}\NormalTok{,}
+  \DataTypeTok{thresholds =}\NormalTok{ roc_info}\OperatorTok{$}\NormalTok{thresholds}
+\NormalTok{)}
+\KeywordTok{print}\NormalTok{(}\StringTok{'head'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "head"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(roc_def)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   tpp       fpp thresholds
+## 1 100 100.00000       -Inf
+## 2 100  97.77778 0.01349011
+## 3 100  95.55556 0.03245008
+## 4 100  93.33333 0.05250145
+## 5 100  91.11111 0.07017225
+## 6 100  88.88889 0.08798755
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{'tail'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "tail"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{tail}\NormalTok{(roc_def)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          tpp fpp thresholds
+## 96  9.090909   0  0.9275222
+## 97  7.272727   0  0.9371857
+## 98  5.454545   0  0.9480358
+## 99  3.636364   0  0.9648800
+## 100 1.818182   0  0.9735257
+## 101 0.000000   0        Inf
+\end{verbatim}
+
+\section{Choose best threshold}\label{choose-best-threshold}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{roc_def[roc_def}\OperatorTok{$}\NormalTok{tpp}\OperatorTok{>}\DecValTok{60} \OperatorTok{&}\StringTok{ }\NormalTok{roc_def}\OperatorTok{$}\NormalTok{tpp }\OperatorTok{<}\StringTok{ }\DecValTok{80}\NormalTok{ ,]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         tpp      fpp thresholds
+## 42 78.18182 35.55556  0.5049310
+## 43 78.18182 33.33333  0.5067116
+## 44 78.18182 31.11111  0.5166680
+## 45 76.36364 31.11111  0.5287933
+## 46 76.36364 28.88889  0.5429351
+## 47 76.36364 26.66667  0.5589494
+## 48 74.54545 26.66667  0.5676342
+## 49 74.54545 24.44444  0.5776086
+## 50 74.54545 22.22222  0.5946054
+## 51 72.72727 22.22222  0.6227449
+## 52 70.90909 22.22222  0.6398136
+## 53 69.09091 22.22222  0.6441654
+## 54 67.27273 22.22222  0.6556705
+## 55 67.27273 20.00000  0.6683618
+## 56 67.27273 17.77778  0.6767661
+## 57 65.45455 17.77778  0.6802060
+## 58 65.45455 15.55556  0.6831936
+## 59 65.45455 13.33333  0.6917225
+## 60 63.63636 13.33333  0.6975300
+## 61 61.81818 13.33333  0.6982807
+\end{verbatim}
+
+\section{Random forest classifier}\label{random-forest-classifier}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rf_model =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(}\KeywordTok{factor}\NormalTok{(obese) }\OperatorTok{~}\StringTok{ }\NormalTok{weight)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{pty =} \StringTok{"s"}\NormalTok{)}
+\KeywordTok{roc}\NormalTok{(}
+\NormalTok{obese,}
+\NormalTok{glm_fit}\OperatorTok{$}\NormalTok{fitted.values,}
+\DataTypeTok{plot =} \OtherTok{TRUE}\NormalTok{,}
+\DataTypeTok{legacy.axes =} \OtherTok{TRUE}\NormalTok{,}
+\DataTypeTok{percent =} \OtherTok{TRUE}\NormalTok{,}
+\DataTypeTok{xlab =} \StringTok{"False Positive Percentage"}\NormalTok{,}
+\DataTypeTok{ylab =} \StringTok{"True Positive Percentage"}\NormalTok{,}
+\DataTypeTok{col =} \StringTok{"#377eb8"}\NormalTok{,}
+\DataTypeTok{lwd =} \DecValTok{4}\NormalTok{,}
+\DataTypeTok{print.auc =} \OtherTok{TRUE}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## roc.default(response = obese, predictor = glm_fit$fitted.values,     percent = TRUE, plot = TRUE, legacy.axes = TRUE, xlab = "False Positive Percentage",     ylab = "True Positive Percentage", col = "#377eb8", lwd = 4,     print.auc = TRUE)
+## 
+## Data: glm_fit$fitted.values in 45 controls (obese 0) < 55 cases (obese 1).
+## Area under the curve: 82.91%
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot.roc}\NormalTok{(obese,rf_model}\OperatorTok{$}\NormalTok{votes[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{percent=} \OtherTok{TRUE}\NormalTok{,}\DataTypeTok{col =} \StringTok{'#4daf4a'}\NormalTok{,}\DataTypeTok{lwd =} \DecValTok{4}\NormalTok{,}\DataTypeTok{print.auc=}\OtherTok{TRUE}\NormalTok{,}\DataTypeTok{add=}\OtherTok{TRUE}\NormalTok{, }\DataTypeTok{print.auc.y=}\DecValTok{40}\NormalTok{)}
+
+\KeywordTok{legend}\NormalTok{(}\StringTok{"bottomright"}\NormalTok{,}\DataTypeTok{legend=}\KeywordTok{c}\NormalTok{(}\StringTok{"Random forest"}\NormalTok{,}\StringTok{"Logistic Regression"}\NormalTok{),}\DataTypeTok{col =}\KeywordTok{c}\NormalTok{(}\StringTok{"#4dac4a"}\NormalTok{,}\StringTok{"#377eb8"}\NormalTok{),}\DataTypeTok{lwd=} \DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ROC_AUC_files/figure-latex/unnamed-chunk-10-1.pdf}
+
+
+\end{document}
