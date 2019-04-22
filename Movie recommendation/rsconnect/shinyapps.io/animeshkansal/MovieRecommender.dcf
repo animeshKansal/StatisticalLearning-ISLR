@@ -1,0 +1,12 @@
+name: MovieRecommender
+title: MovieRecommender
+username:
+account: animeshkansal
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 865154
+bundleId: 2014154
+url: https://animeshkansal.shinyapps.io/MovieRecommender/
+when: 1555376507.49779
+asMultiple: FALSE
+asStatic: FALSE

@@ -1,0 +1,5 @@
+"0","RatingsMoviesNorm <- normalize(RatingsMovies)"
+"0","RatingsMoviesNorm <- normalize(RatingsMoviesNorm)"
+"2","x was already normalized by row!"
+"0","# The algorithm automatically normalizes the data"
+"0","hist(rowMeans(RatingsMoviesNorm),breaks = 25,col = 'gray',main = ""Normalized distribution of the Avg. Rating per User"")"

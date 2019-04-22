@@ -1,0 +1,7 @@
+"0","## 75% of the sample size"
+"0","smp_size <- floor(0.75 * nrow(RatingsMovies))"
+"0","## set the seed to make your partition reproducible"
+"0","set.seed(42)"
+"0","Train_ind <- sample(seq_len(nrow(RatingsMovies)), size = smp_size)"
+"0","Train <- RatingsMovies[Train_ind, ]"
+"0","Test <- RatingsMovies[-Train_ind, ]"

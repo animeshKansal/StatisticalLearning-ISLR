@@ -1,0 +1,248 @@
+---
+title: "MovieRecommendation"
+author: "Animesh Kansal"
+date: "4/12/2019"
+output: html_document
+---
+
+```{r, echo=FALSE}
+
+library("recommenderlab")
+library("ggplot2")
+
+# setting seed
+set.seed(42)
+
+# The 100k MovieLense ratings data set. The data was collected through the MovieLens web site (movielens.umn.edu) during the seven-month period from September 19th, 1997 through April 22nd, 1998. The data set contains about 100,000 ratings (1-5) from 943 users on 1664 movies. Movie metadata is also provided in MovieLenseMeta.
+
+data(MovieLense)
+```
+
+
+## Exploratory Data Analysis
+## Exploring Similarity Data
+```{r, echo=FALSE}
+
+# User-user  Similarity
+UserSimilarity <- similarity(MovieLense[1:10, ], method = "cosine", which = "users")
+as.matrix(UserSimilarity)
+image(as.matrix(UserSimilarity), main = "User-User similarity for first 10 users")
+
+
+# Movie-movie Similarity
+MovieSimilarity <- similarity(MovieLense[, 1:15], method = "cosine", which = "items")
+as.matrix(MovieSimilarity)
+image(as.matrix(MovieSimilarity), main = "Movie-Movie similarity for first 15 movies")
+
+# Dimensions
+dim(MovieLense)
+
+
+#The ratings are integers in the range 0-5. Let's count the occurrences of each of them
+VectorRatings <- as.vector(MovieLense@data)
+unique(VectorRatings)
+VectorRatings <- VectorRatings[VectorRatings != 0]
+VectorRatings <- factor(VectorRatings)
+barplot(table(VectorRatings),main ="Distribution of the ratings")
+
+ViewsPerMovie <- colCounts(MovieLense)
+TableViews <- data.frame(
+  movie = names(ViewsPerMovie),
+  views = ViewsPerMovie
+)
+
+TableViews <- TableViews[order(TableViews$views, decreasing = TRUE), ]
+
+ggplot(TableViews[1:6, ], aes(x = movie, y = views)) + geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + ggtitle("Number of views of the top movies")
+
+
+hist(colCounts(MovieLense),breaks = 60,xlim = c(0,600),main = "Distribution of number of Reviews/Movies",xlab = "Reviews/Movies")
+axis(side=1, at=seq(0,1000, 100), labels=seq(0,1000,100))
+
+
+hist(rowCounts(MovieLense),breaks = 75,xlim = c(0,800),main = "Distribution of number of Reviews/Users",xlab = "Reviews/Users")
+axis(side=1, at=seq(0,1000, 100), labels=seq(0,1000,100))
+
+
+
+```
+
+
+
+
+
+```{r, echo=FALSE}
+# Range of reviews/user
+range(rowCounts(MovieLense))
+# Range of reviews/movies
+range(colCounts(MovieLense))
+
+# Minimum number of 5 reviews per movie
+RatingsMovies <- MovieLense[,colCounts(MovieLense) > 20] 
+
+hist(colMeans(RatingsMovies),breaks = 25,col = 'gray',main = "Distribution of Avg. Ratings per Movie")
+
+hist(rowMeans(RatingsMovies),breaks = 25,col = 'gray',main = "Distribution of the Avg. Rating per User")
+
+
+RatingsMoviesNorm <- normalize(RatingsMovies)
+RatingsMoviesNorm <- normalize(RatingsMoviesNorm)
+
+# The algorithm automatically normalizes the data
+
+hist(rowMeans(RatingsMoviesNorm),breaks = 25,col = 'gray',main = "Normalized distribution of the Avg. Rating per User")
+
+```
+
+
+# Train / Test Set
+```{r, echo=FALSE}
+
+## 75% of the sample size
+smp_size <- floor(0.75 * nrow(RatingsMovies))
+
+## set the seed to make your partition reproducible
+set.seed(42)
+Train_ind <- sample(seq_len(nrow(RatingsMovies)), size = smp_size)
+
+Train <- RatingsMovies[Train_ind, ]
+Test <- RatingsMovies[-Train_ind, ]
+
+```
+
+
+# Default IBCF
+```{r, echo=FALSE}
+
+
+IBCFModel <- Recommender(data = Train, method = "IBCF")
+
+Predictions <- predict(object = IBCFModel, newdata = Test, n = 5)
+
+
+# for Test dataset, see predictions
+PredictionsMatrix <- sapply(Predictions@items, function(x){
+  colnames(RatingsMovies)[x]
+})
+
+
+MovieRecommendMatrix <- factor(table(unlist(PredictionsMatrix)))
+
+qplot(MovieRecommendMatrix) + ggtitle("Movie recommended most times using IBCF Model")
+
+
+MovieRecommendOrder <- sort(MovieRecommendMatrix, decreasing = TRUE)
+MovieRecommendOrder <- head(MovieRecommendOrder, n = 5)
+MovieRecommendOrder <- data.frame(names(MovieRecommendOrder), MovieRecommendOrder)
+MovieRecommendOrder[2:2]
+
+
+
+```
+
+
+# UBCF
+```{r, echo=FALSE}
+
+
+UBCFModel <- Recommender(data = Train, method = "UBCF")
+
+
+Predictions <- predict(object = UBCFModel, newdata = Test, n = 5) 
+
+
+
+PredictionsMatrix <- sapply(Predictions@items, function(x){colnames(RatingsMovies)[x]
+})
+
+
+MovieRecommendMatrix <- factor(table(PredictionsMatrix))
+qplot(MovieRecommendMatrix) + ggtitle("Movie recommended most times using UBCF Model")
+
+MovieRecommendOrder <- sort(MovieRecommendMatrix, decreasing = TRUE)
+MovieRecommendOrder <- head(MovieRecommendOrder, n = 5)
+MovieRecommendOrder <- data.frame(names(MovieRecommendOrder), MovieRecommendOrder)
+MovieRecommendOrder[2:2]
+
+```
+
+
+
+
+# Evaluating recommender systems
+```{r, echo=FALSE}
+set.seed(1)
+e <- evaluationScheme(RatingsMovies, method="split", train=0.75, given=-5)
+#5 ratings of 25% of users are excluded for testing
+
+Popular <- Recommender(getData(e, "train"), "POPULAR")
+prediction <- predict(Popular, getData(e, "known"), type="ratings")
+
+rmse_popular <- calcPredictionAccuracy(prediction, getData(e, "unknown"))[1]
+rmse_popular
+saveRDS(Popular, file = "popular.rds")
+
+
+
+# Tuning UBCF Model
+rmse_ubcf = rep(0, 40)
+count = 1
+for (nn in seq(1,200,by=5)){
+  UBCFModel <- Recommender(getData(e, "train"), method = "UBCF", 
+                     param=list(normalize = "center", method="Cosine", nn=nn+1))
+
+prediction <- predict(UBCFModel, getData(e, "known"), type="ratings")
+
+rmse_ubcf[count] <- calcPredictionAccuracy(prediction, getData(e, "unknown"))[1]
+
+count = count+1
+}
+
+plot(y = rmse_ubcf,x = seq(1,200,by=5),ylab="RMSE",xlab="Number of users",ylim= c(0,2),main="RMSE for different number of users ")
+
+
+#Tuned UBCF Model
+set.seed(1)
+UBCFModel <- Recommender(getData(e, "train"), method = "UBCF", 
+                     param=list(normalize = "center", method="Cosine", nn=50))
+
+prediction <- predict(UBCFModel, getData(e, "known"), type="ratings")
+
+rmse_ubcf <- calcPredictionAccuracy(prediction, getData(e, "unknown"))[1]
+rmse_ubcf
+saveRDS(UBCFModel, file = "ubcf.rds")
+
+
+# Tuning IBCF Model
+rmse_ibcf = rep(0, 50)
+count = 1
+for (k in seq(1,500,by=10)){
+IBCFModel <- Recommender(getData(e, "train"), method = "IBCF", 
+                     param=list(normalize = "center", method="Cosine", k=k+1))
+
+prediction <- predict(IBCFModel, getData(e, "known"), type="ratings")
+
+rmse_ibcf[count] <- calcPredictionAccuracy(prediction, getData(e, "unknown"))[1]
+
+count = count+1
+}
+
+plot(y = rmse_ibcf,x = seq(1,500,by=10),ylab="RMSE",xlab="Number of movies",ylim= c(0,2),main="RMSE for different number of movies ")
+
+
+
+
+#Tuned IBCF model
+set.seed(1)
+
+IBCFModel <- Recommender(getData(e, "train"), method = "IBCF", 
+                     param=list(normalize = "center", method="Cosine", k=350))
+
+prediction <- predict(IBCFModel, getData(e, "known"), type="ratings")
+
+rmse_ibcf <- calcPredictionAccuracy(prediction, getData(e, "unknown"))[1]
+rmse_ibcf
+saveRDS(IBCFModel,file="ibcf.rds")
+
+```
+

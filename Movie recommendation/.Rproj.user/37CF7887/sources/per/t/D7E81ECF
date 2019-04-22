@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1555318367187.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "966522775",
+    "id" : "D7E81ECF",
+    "lastKnownWriteTime" : 1555400945,
+    "last_content_update" : 1555400945262,
+    "path" : "~/Desktop/Terminator/UT DALLAS/SEMESTER 5/ABA With R/Projects/Movie recommendation/MovieRecommendation.Rmd",
+    "project_path" : "MovieRecommendation.Rmd",
+    "properties" : {
+        "cursorPosition" : "110,3",
+        "scrollLine" : "107",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

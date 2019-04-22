@@ -1,0 +1,7 @@
+"0","ViewsPerMovie <- colCounts(MovieLense)"
+"0","TableViews <- data.frame("
+"0","  movie = names(ViewsPerMovie),"
+"0","  views = ViewsPerMovie"
+"0",")"
+"0","TableViews <- TableViews[order(TableViews$views, decreasing = TRUE), ]"
+"0","ggplot(TableViews[1:6, ], aes(x = movie, y = views)) + geom_bar(stat=""identity"") + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + ggtitle(""Number of views of the top movies"")"

@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1555375994490.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3988539528",
+    "id" : "CD0ACC3",
+    "lastKnownWriteTime" : 1555377276,
+    "last_content_update" : 1555377276309,
+    "path" : "~/Desktop/Terminator/UT DALLAS/SEMESTER 5/ABA With R/Projects/Movie recommendation/app.R",
+    "project_path" : "app.R",
+    "properties" : {
+        "cursorPosition" : "6,0",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
